@@ -33,7 +33,10 @@
 					</tr>
 				</table>
 				<div class="bottom">
-					<a href="">답글작성</a>
+					<c:if test="${boardVO.userName!=authUser.name }">
+						<a href="${pageContext.request.contextPath }/board?a=writeform&no=${boardVO.no}">답글작성</a>
+					</c:if>
+					
 					<a href="${pageContext.request.contextPath }/board">글목록</a>
 					<c:if test="${boardVO.userName==authUser.name }">
 						<a href="${pageContext.request.contextPath }/board?a=modifyform&no=${boardVO.no}">글수정</a>

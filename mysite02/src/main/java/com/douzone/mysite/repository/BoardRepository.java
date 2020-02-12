@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douzone.mysite.vo.BoardVO;
-import com.douzone.mysite.vo.UserVO;
 
 public class BoardRepository {
 	private Connection getConnection() throws SQLException {
@@ -27,7 +26,7 @@ public class BoardRepository {
 		return con;
 	}
 	
-	public Boolean insert(BoardVO boardVO) {
+	public Boolean initInsert(BoardVO boardVO) {
 			
 			Boolean result = false;
 			Connection con = null;
@@ -62,8 +61,8 @@ public class BoardRepository {
 					e.printStackTrace();
 				}
 			}
-		return result;
-		}
+			return result;
+	}
 
 	public List<BoardVO> findAll(){
 		List<BoardVO> result = new ArrayList<>();
@@ -75,7 +74,7 @@ public class BoardRepository {
 		try {
 			con = getConnection();
 			//select a.no,a.title,a.contents,a.Hit,a.reg_date,a.g_no,a.o_no,a.depth,a.user_no,b.name from board a,user b where a.user_no = b.no order by a.no desc;
-			String sql = "select a.no,a.title,a.contents,a.hit,a.reg_date,a.g_no,a.o_no,a.depth,a.user_no,b.name from board a,user b where a.user_no = b.no order by a.no desc";
+			String sql = "select a.no,a.title,a.contents,a.hit,a.reg_date,a.g_no,a.o_no,a.depth,a.user_no,b.name from board a,user b where a.user_no = b.no order by a.g_no desc, a.o_no desc";
 			pstmt = con.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
@@ -141,7 +140,7 @@ public class BoardRepository {
 			
 			
 			// select a.no,b.name,a.title,a.contents from board a, user b where a,user_no = b.no where a.no = ?
-			String sql = "select a.no,b.name,a.title,a.contents from board a, user b where a.user_no = b.no and a.no = ?";
+			String sql = "select a.no,b.name,a.title,a.contents,a.hit,a.reg_date,a.g_no,a.o_no,a.depth from board a, user b where a.user_no = b.no and a.no = ?";
 			pstmt=con.prepareStatement(sql);
 			pstmt.setLong(1, no);
 			
@@ -152,12 +151,21 @@ public class BoardRepository {
 				String userName = rs.getString(2);
 				String title = rs.getString(3);
 				String contents = rs.getString(4);
-				
+				Integer hit = rs.getInt(5);
+				String regDate = rs.getString(6);
+				Integer gNo = rs.getInt(7);
+				Integer oNo = rs.getInt(8);
+				Integer depth = rs.getInt(9);
 				
 				boardVO.setNo(newNo);
 				boardVO.setUserName(userName);
 				boardVO.setTitle(title);
 				boardVO.setContents(contents);
+				boardVO.setHit(hit);
+				boardVO.setRegDate(regDate);
+				boardVO.setgNo(gNo);
+				boardVO.setoNo(oNo);
+				boardVO.setDepth(depth);
 				
 			}		
 
@@ -213,6 +221,91 @@ public class BoardRepository {
 		}
 		
 		
-	}	
+	}
+
+	public Boolean insert(BoardVO boardVO) {
+
+		
+		Boolean result = false;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			con = getConnection();
+			//INSERT INTO board VALUES(NULL,'ㅎㅇ','ㅎㅇㅎㅇ',4,NOW(),(SELECT IFNULL(MAX(b.g_no) + 1,0) FROM board b),1,0,1)
+			String sql = "insert into board values(null,?,?,?+1,now(),?,?,?+1,?)";
+			pstmt = con.prepareStatement(sql);
+
+			pstmt.setString(1, boardVO.getTitle());
+			pstmt.setString(2, boardVO.getContents());
+			pstmt.setInt(3, boardVO.getHit()); //조회수 수정필요 => 업데이트문으로 해결
+			pstmt.setInt(4,boardVO.getgNo());//해당번호 그대로
+			pstmt.setInt(5,boardVO.getoNo());
+			pstmt.setInt(6,boardVO.getDepth());			
+			pstmt.setLong(7,boardVO.getUserNo());
+
+			
+			int count = pstmt.executeUpdate();
+			
+			result = count == 1;
+			
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+		
+	}
+
+	public void updateSequece(BoardVO boardVO) {
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			con = getConnection();
+
+			String sql = "update board set o_no = o_no+1 where g_no = ? and o_no >= ?";
+			pstmt = con.prepareStatement(sql);
+			
+			
+			pstmt.setInt(1,boardVO.getgNo());
+			pstmt.setInt(2,boardVO.getoNo());
+			
+			
+			
+			
+			pstmt.executeUpdate();			
+			
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		
+	}
+
+	
+
+
 	
 }

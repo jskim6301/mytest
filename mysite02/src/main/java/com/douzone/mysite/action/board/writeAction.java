@@ -29,13 +29,33 @@ public class writeAction implements Action {
 			
 			String title = request.getParameter("title");
 			String contents = request.getParameter("contents");
+
 			
-			boardVO.setTitle(title);
-			boardVO.setContents(contents);
-			boardVO.setUserNo(no);
-			
-			
-			new BoardRepository().insert(boardVO);
+			// no값을 받으면..
+			if(  !(request.getParameter("no").isEmpty()) ) { //no값이 빈값이 아니라면
+				String pageNo1 = request.getParameter("no");// 페이지해당 번호
+				Long pageNo2 = Long.parseLong(pageNo1);
+				System.out.println(pageNo2+"받음");
+				
+				boardVO = new BoardRepository().findByNo(pageNo2);
+				
+				boardVO.setTitle(title);
+				boardVO.setContents(contents);
+				boardVO.setUserNo(no);
+				
+				new BoardRepository().updateSequece(boardVO);
+				
+				new BoardRepository().insert(boardVO);
+				
+				
+				
+			}else {//no값이 없는 경우
+				boardVO.setTitle(title);
+				boardVO.setContents(contents);
+				boardVO.setUserNo(no);
+				
+				new BoardRepository().initInsert(boardVO);
+			}
 			WebUtil.redirect(request.getContextPath()+"/board", request, response);
 			return;
 		}

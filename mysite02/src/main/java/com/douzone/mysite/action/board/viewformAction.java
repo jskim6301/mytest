@@ -23,7 +23,5 @@ public class viewformAction implements Action {
 		
 		request.setAttribute("boardVO", boardVO);
 		WebUtil.forward("/WEB-INF/views/board/view.jsp", request, response);
-
 	}
-
 }
