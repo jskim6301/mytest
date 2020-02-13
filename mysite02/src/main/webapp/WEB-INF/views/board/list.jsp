@@ -62,15 +62,26 @@
 							</c:otherwise>
 						</c:choose>
 						
-						<td>${vo.userName }</td>
-						<td>${vo.hit }</td>
-						<td>${vo.regDate }</td>
-						<c:if test="${vo.userName==authUser.name }">
-							<td><a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no}" class="del">삭제</a></td>
-						</c:if>						
-
 						
-							
+						<c:choose>
+							<c:when test="${fn:length(vo.contents) > 0 }"> <!-- 내용이 있을 경우 -->						
+								<td>${vo.userName }</td>
+								<td>${vo.hit }</td>
+								<td>${vo.regDate }</td>		
+								<c:if test="${vo.userName==authUser.name }">
+									<td><a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no}" class="del">삭제</a></td>
+								</c:if>
+							</c:when>
+							<c:otherwise>
+								<td></td>
+								<td></td>
+								<td></td>
+								<c:if test="${vo.userName==authUser.name }">
+									<td><a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no}" class="del">삭제</a></td>
+								</c:if>								
+							</c:otherwise>
+						</c:choose>
+													
 					</tr>						
 					</c:forEach>
 				</table>
