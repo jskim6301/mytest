@@ -58,7 +58,14 @@
 							</c:when>
 							
 							<c:otherwise><!-- 내용이 없을경우 -->
-								<td>${vo.title }</td>
+								<c:choose>
+								<c:when test="${vo.depth>0}">
+									<td style="text-align:left; padding-left:${30*vo.depth }px"><img src='/mysite02/assets/images/reply.png'>${vo.title }</td>
+								</c:when>
+								<c:otherwise>
+									<td>${vo.title }</td>
+								</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 						</c:choose>
 						
