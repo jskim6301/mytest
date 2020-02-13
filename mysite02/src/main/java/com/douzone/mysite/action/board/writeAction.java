@@ -29,7 +29,15 @@ public class writeAction implements Action {
 			
 			String title = request.getParameter("title");
 			String contents = request.getParameter("contents");
-
+			
+			
+			if(title.isEmpty() || contents.isEmpty()) {
+				WebUtil.redirect(request.getContextPath()+"/board", request, response);
+				return;
+			}
+			
+			
+			
 			
 			// no값을 받으면..
 			if(  !(request.getParameter("no").isEmpty()) ) { //no값이 빈값이 아니라면

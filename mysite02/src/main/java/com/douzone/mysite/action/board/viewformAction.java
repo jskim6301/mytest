@@ -15,11 +15,15 @@ public class viewformAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		
+		
 		String no = request.getParameter("no");
 		Long No = Long.parseLong(no);
 		
 		BoardVO boardVO = new BoardVO();
+		
 		boardVO =  new BoardRepository().findByNo(No);
+		new BoardRepository().updateViewCnt(boardVO);
 		
 		request.setAttribute("boardVO", boardVO);
 		WebUtil.forward("/WEB-INF/views/board/view.jsp", request, response);

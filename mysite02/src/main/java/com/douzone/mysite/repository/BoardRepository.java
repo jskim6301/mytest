@@ -233,16 +233,15 @@ public class BoardRepository {
 		try {
 			con = getConnection();
 			//INSERT INTO board VALUES(NULL,'ㅎㅇ','ㅎㅇㅎㅇ',4,NOW(),(SELECT IFNULL(MAX(b.g_no) + 1,0) FROM board b),1,0,1)
-			String sql = "insert into board values(null,?,?,?+1,now(),?,?,?+1,?)";
+			String sql = "insert into board values(null,?,?,0,now(),?,?,?+1,?)";
 			pstmt = con.prepareStatement(sql);
 
 			pstmt.setString(1, boardVO.getTitle());
 			pstmt.setString(2, boardVO.getContents());
-			pstmt.setInt(3, boardVO.getHit()); //조회수 수정필요 => 업데이트문으로 해결
-			pstmt.setInt(4,boardVO.getgNo());//해당번호 그대로
-			pstmt.setInt(5,boardVO.getoNo());
-			pstmt.setInt(6,boardVO.getDepth());			
-			pstmt.setLong(7,boardVO.getUserNo());
+			pstmt.setInt(3,boardVO.getgNo());//해당번호 그대로
+			pstmt.setInt(4,boardVO.getoNo());
+			pstmt.setInt(5,boardVO.getDepth());			
+			pstmt.setLong(6,boardVO.getUserNo());
 
 			
 			int count = pstmt.executeUpdate();
@@ -304,8 +303,73 @@ public class BoardRepository {
 		
 	}
 
-	
+	public void updateViewCnt(BoardVO boardVO) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
 
+		try {
+			con = getConnection();
 
-	
+			String sql = "update board set hit = hit+1 where no = ? ";
+			pstmt = con.prepareStatement(sql);
+			
+			
+			pstmt.setLong(1,boardVO.getNo());		
+			
+			pstmt.executeUpdate();			
+			
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+	}
+
+	public void delete(BoardVO boardVO) {
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			con = getConnection();
+
+			String sql = "update board set title = '작성자에 의해 삭제되었습니다.',contents=''  where no = ? and user_no = ?";
+			pstmt = con.prepareStatement(sql);
+			
+			
+			pstmt.setLong(1,boardVO.getNo());
+			pstmt.setLong(2,boardVO.getUserNo());			
+			
+			pstmt.executeUpdate();			
+			
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+	}
+
 }
+
+
+	
