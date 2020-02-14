@@ -18,6 +18,8 @@ public class BoardActionFactory extends ActionFactory {
 				return new modifyformAction();
 			case "modify":
 				return new modifyAction();
+			case "search":
+				return new searchAction();				
 			case "delete":
 				return new deleteAction();				
 			default :

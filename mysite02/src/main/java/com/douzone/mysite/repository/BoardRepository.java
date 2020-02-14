@@ -471,6 +471,119 @@ public class BoardRepository {
 		return count;
 	}
 
+	public List<BoardVO> findByContents(String kwd) {
+		List<BoardVO> result = new ArrayList<>();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = getConnection();
+			
+			
+			// select a.no,b.name,a.title,a.contents from board a, user b where a,user_no = b.no where a.no = ?
+			String sql = "select a.no,b.name,a.title,a.contents,a.hit,a.reg_date from board a, user b where a.title like concat('%',?,'%');";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, kwd);
+			
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Long no = rs.getLong(1);
+				String userName = rs.getString(2);
+				String title = rs.getString(3);
+				String contents = rs.getString(4);
+				Integer hit = rs.getInt(5);
+				String regDate = rs.getString(6);
+				
+				BoardVO boardVO = new BoardVO();
+				boardVO.setNo(no);
+				boardVO.setUserName(userName);
+				boardVO.setTitle(title);
+				boardVO.setContents(contents);
+				boardVO.setHit(hit);
+				boardVO.setRegDate(regDate);
+				
+				result.add(boardVO);
+			}		
+
+			
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;				
+	}
+
+	public List<BoardVO> findByName(String kwd) {
+		
+		List<BoardVO> result = new ArrayList<>();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = getConnection();
+			
+			
+			// select a.no,b.name,a.title,a.contents from board a, user b where a,user_no = b.no where a.no = ?
+			String sql = "select a.no,b.name,a.title,a.contents,a.hit,a.reg_date from board a, user b where b.name like concat('%',?,'%');";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, kwd);
+			
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Long no = rs.getLong(1);
+				String userName = rs.getString(2);
+				String title = rs.getString(3);
+				String contents = rs.getString(4);
+				Integer hit = rs.getInt(5);
+				String regDate = rs.getString(6);
+				
+				BoardVO boardVO = new BoardVO();
+				boardVO.setNo(no);
+				boardVO.setUserName(userName);
+				boardVO.setTitle(title);
+				boardVO.setContents(contents);
+				boardVO.setHit(hit);
+				boardVO.setRegDate(regDate);
+				
+				result.add(boardVO);
+			}		
+
+			
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;	
+	}
+
 }
 
 
