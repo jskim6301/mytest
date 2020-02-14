@@ -21,7 +21,7 @@
 				
 				<table class="tbl-ex">
 					<tr>
-						<th>번호</th>
+						<th>번호</th> 
 						<th>제목</th>
 						<th>글쓴이</th>
 						<th>조회수</th>
@@ -29,9 +29,10 @@
 						<th>&nbsp;</th>
 					</tr>				
 					<c:set var="cnt" value='${fn:length(list) }'/>
+					
 					<c:forEach items='${list}' var='vo' varStatus='status'>
 					<tr>
-						<td>${cnt-status.index }</td>
+						<td>${count-(displayPost) -status.index }</td>
 						
 <%-- 						<c:choose>
 							<c:when test="${vo.depth>0}">
@@ -74,7 +75,7 @@
 							<c:when test="${fn:length(vo.contents) > 0 }"> <!-- 내용이 있을 경우 -->						
 								<td>${vo.userName }</td>
 								<td>${vo.hit }</td>
-								<td>${vo.regDate }</td>		
+								<td>${fn:substring(vo.regDate,0,19) }</td>		
 								<c:if test="${vo.userName==authUser.name }">
 									<td><a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no}" class="del">삭제</a></td>
 								</c:if>
@@ -95,17 +96,31 @@
 			
 
 				<!-- pager 추가 -->
-				<div class="pager">
-					<ul>
-						<li><a href="">◀</a></li>
-						<li><a href="">1</a></li>
-						<li class="selected">2</li>
-						<li><a href="">3</a></li>
-						<li>4</li>
-						<li>5</li>
-						<li><a href="">▶</a></li>
-					</ul>
-				</div>					
+				<div class ="pager">
+				<div class="selected">
+					<c:if test="${prev}">
+						<span>[ <a href="${pageContext.request.contextPath }/board?num=${startPageNum -1}">이전</a> ]</span>
+					</c:if>
+					
+					
+						<c:forEach begin="${startPageNum}" end="${endPageNum}" var="num">
+							<span>
+								<c:if test="${select != num }">
+									<a href="${pageContext.request.contextPath }/board?num=${num}">${num}</a>
+								</c:if>
+								
+								<c:if test="${select == num }">
+									<b>${num}</b>
+								</c:if>
+											
+							</span>
+						</c:forEach>
+								
+					<c:if test="${next}">
+						<span>[ <a href="${pageContext.request.contextPath }/board?num=${endPageNum+1}">다음</a> ]</span>
+					</c:if>
+				</div>
+				</div>
 				<!-- pager 추가 -->				
 				
 				<div class="bottom">

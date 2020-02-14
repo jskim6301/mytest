@@ -64,7 +64,7 @@ public class BoardRepository {
 			return result;
 	}
 
-	public List<BoardVO> findAll(){
+	public List<BoardVO> findAll(int displayPost,int postNum){
 		List<BoardVO> result = new ArrayList<>();
 		
 		Connection con = null;
@@ -74,8 +74,10 @@ public class BoardRepository {
 		try {
 			con = getConnection();
 			//select a.no,a.title,a.contents,a.Hit,a.reg_date,a.g_no,a.o_no,a.depth,a.user_no,b.name from board a,user b where a.user_no = b.no order by a.no desc;
-			String sql = "select a.no,a.title,a.contents,a.hit,a.reg_date,a.g_no,a.o_no,a.depth,a.user_no,b.name from board a,user b where a.user_no = b.no order by a.g_no desc, a.o_no desc";
+			String sql = "select a.no,a.title,a.contents,a.hit,a.reg_date,a.g_no,a.o_no,a.depth,a.user_no,b.name from board a,user b where a.user_no = b.no order by a.g_no desc, a.o_no desc limit ?,?";
 			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, displayPost);
+			pstmt.setInt(2, postNum);
 			
 			rs = pstmt.executeQuery();
 			
@@ -127,6 +129,71 @@ public class BoardRepository {
 		
 		return result;
 	}
+	
+	public List<BoardVO> findAll2(){
+		List<BoardVO> result = new ArrayList<>();
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+	
+		try {
+			con = getConnection();
+			//select a.no,a.title,a.contents,a.Hit,a.reg_date,a.g_no,a.o_no,a.depth,a.user_no,b.name from board a,user b where a.user_no = b.no order by a.no desc;
+			String sql = "select a.no,a.title,a.contents,a.hit,a.reg_date,a.g_no,a.o_no,a.depth,a.user_no,b.name from board a,user b where a.user_no = b.no order by a.g_no desc, a.o_no desc";
+			pstmt = con.prepareStatement(sql);
+
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Long no = rs.getLong(1);
+				String title = rs.getString(2);
+				String contents = rs.getString(3);
+				Integer hit = rs.getInt(4);
+				String regDate = rs.getString(5);
+				Integer gNo = rs.getInt(6);
+				Integer oNo = rs.getInt(7);
+				Integer depth = rs.getInt(8);
+				Long userNo = rs.getLong(9);
+				String userName = rs.getString(10);
+				
+				
+				BoardVO vo = new BoardVO();
+				vo.setNo(no);
+				vo.setTitle(title);
+				vo.setContents(contents);
+				vo.setHit(hit);
+				vo.setRegDate(regDate);
+				vo.setgNo(gNo);
+				vo.setoNo(oNo);
+				vo.setDepth(depth);
+				vo.setUserNo(userNo);
+				vo.setUserName(userName);
+				
+				result.add(vo);
+			}			
+			
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		
+		return result;
+	}	
 
 	public BoardVO findByNo(Long no) {
 		
@@ -367,6 +434,41 @@ public class BoardRepository {
 			}
 		}	
 		
+	}
+
+	public int count() {
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		int count = 0;
+		try {
+			con = getConnection();
+
+			String sql = "select count(*) from board";
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt(1);				
+			}
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+				
+		return count;
 	}
 
 }

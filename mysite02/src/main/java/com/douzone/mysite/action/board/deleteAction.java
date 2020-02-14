@@ -33,7 +33,7 @@ public class deleteAction implements Action {
 			
 			new BoardRepository().delete(boardVO);
 			
-			WebUtil.redirect(request.getContextPath()+"/board", request, response);	
+			WebUtil.redirect(request.getContextPath()+"/board?num=1", request, response);	
 			return;
 		}
 						

@@ -32,7 +32,7 @@ public class writeAction implements Action {
 			
 			
 			if(title.isEmpty() || contents.isEmpty()) {
-				WebUtil.redirect(request.getContextPath()+"/board", request, response);
+				WebUtil.redirect(request.getContextPath()+"/board?num=", request, response);
 				return;
 			}
 			
@@ -57,14 +57,14 @@ public class writeAction implements Action {
 				
 				
 				
-			}else {//no값이 없는 경우
+			}else {//no이 빈값이 아니라면 처음 삽입
 				boardVO.setTitle(title);
 				boardVO.setContents(contents);
 				boardVO.setUserNo(no);
 				
 				new BoardRepository().initInsert(boardVO);
 			}
-			WebUtil.redirect(request.getContextPath()+"/board", request, response);
+			WebUtil.redirect(request.getContextPath()+"/board?num=1", request, response);
 			return;
 		}
 		WebUtil.redirect(request.getContextPath()+"/user?a=loginform", request, response);

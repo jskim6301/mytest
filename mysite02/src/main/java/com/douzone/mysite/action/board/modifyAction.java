@@ -34,7 +34,7 @@ public class modifyAction implements Action {
 			
 			
 			new BoardRepository().update(boardVO);
-			WebUtil.redirect(request.getContextPath()+"/board", request, response);
+			WebUtil.redirect(request.getContextPath()+"/board?num=1", request, response);
 			return;
 		}
 		WebUtil.redirect(request.getContextPath(), request, response);
