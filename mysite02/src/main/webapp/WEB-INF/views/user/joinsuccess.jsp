@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div id="container">
-		<jsp:include page="/WEB-INF/views/includes/header.jsp" />
+		<jsp:include page="/WEB-INF/views/includes/header.jsp" /><!--  -->
 		<div id="content">
 			<div id="user">
 				<p class="jr-success">

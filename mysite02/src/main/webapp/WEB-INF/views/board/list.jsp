@@ -11,10 +11,12 @@
 </head>
 <body>
 	<div id="container">
-		<c:import url="/WEB-INF/views/includes/header.jsp" />
+		<c:import url="/WEB-INF/views/includes/header.jsp" /><!--  -->
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.request.contextPath }/board?a=search" method="post">
+				<form id="search_form" action="${pageContext.request.contextPath }/board" method="post">
+					<input type = "hidden" name = "a" value="search">
+					<input type = "hidden" name = "num" value="1">
 					<input type="text" id="kwd" name="kwd" value="">
 						<select name="option">
 							<option value="title">제목으로 찾기</option>
@@ -80,7 +82,8 @@
 							<c:when test="${fn:length(vo.contents) > 0 }"> <!-- 내용이 있을 경우 -->						
 								<td>${vo.userName }</td>
 								<td>${vo.hit }</td>
-								<td>${fn:substring(vo.regDate,0,19) }</td>		
+								<td>${fn:substring(vo.regDate,0,19) }</td>
+								<%-- <td><fmt:formatDate value="${vo.regDate}" pattern="yyyy-MM-dd" /></td> --%>										
 								<c:if test="${vo.userName==authUser.name }">
 									<td><a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no}" class="del">삭제</a></td>
 								</c:if>

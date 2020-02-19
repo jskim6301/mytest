@@ -15,7 +15,7 @@
 </head>
 <body>
 	<div id="container">
-		<%-- <jsp:include page="/WEB-INF/views/includes/header.jsp" /> --%>
+		<%-- <jsp:include page="/WEB-INF/views/includes/header.jsp" /> --%><!--  -->
 		<c:import url="/WEB-INF/views/includes/header.jsp" />
 		<div id="wrapper">
 			<div id="content">

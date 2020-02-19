@@ -18,7 +18,7 @@ public class deleteAction implements Action {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession();// 
 		if(session != null && session.getAttribute("authUser") != null) {
 			
 			BoardVO boardVO = new BoardVO();

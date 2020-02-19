@@ -26,7 +26,6 @@ public class BoardRepository {
 		return con;
 	}
 	
-	
 	public Boolean initInsert(BoardVO boardVO) {
 			
 			Boolean result = false;
@@ -472,7 +471,7 @@ public class BoardRepository {
 		return count;
 	}
 
-	public List<BoardVO> findByContents(String kwd) {
+	public List<BoardVO> findByTitle(String kwd,int displayPost,int postNum) {
 		List<BoardVO> result = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -482,11 +481,12 @@ public class BoardRepository {
 			con = getConnection();
 			
 			
-			// select a.no,b.name,a.title,a.contents from board a, user b where a,user_no = b.no where a.no = ?
-			String sql = "select a.no,b.name,a.title,a.contents,a.hit,a.reg_date from board a, user b where a.title like concat('%',?,'%');";
+			// 
+			String sql = "select a.no,b.name,a.title,a.contents,a.hit,a.reg_date from board a, user b where a.user_no = b.no and a.title like concat('%',?,'%') limit ?,?";
 			pstmt=con.prepareStatement(sql);
 			pstmt.setString(1, kwd);
-			
+			pstmt.setInt(2, displayPost);
+			pstmt.setInt(3, postNum);			
 			
 			rs = pstmt.executeQuery();
 			
@@ -498,6 +498,7 @@ public class BoardRepository {
 				Integer hit = rs.getInt(5);
 				String regDate = rs.getString(6);
 				
+				
 				BoardVO boardVO = new BoardVO();
 				boardVO.setNo(no);
 				boardVO.setUserName(userName);
@@ -505,6 +506,7 @@ public class BoardRepository {
 				boardVO.setContents(contents);
 				boardVO.setHit(hit);
 				boardVO.setRegDate(regDate);
+				
 				
 				result.add(boardVO);
 			}		
@@ -528,7 +530,7 @@ public class BoardRepository {
 		return result;				
 	}
 
-	public List<BoardVO> findByName(String kwd) {
+	public List<BoardVO> findByName(String kwd,int displayPost,int postNum) {
 		
 		List<BoardVO> result = new ArrayList<>();
 		Connection con = null;
@@ -540,10 +542,11 @@ public class BoardRepository {
 			
 			
 			// select a.no,b.name,a.title,a.contents from board a, user b where a,user_no = b.no where a.no = ?
-			String sql = "select a.no,b.name,a.title,a.contents,a.hit,a.reg_date from board a, user b where b.name like concat('%',?,'%');";
+			String sql = "select a.no,b.name,a.title,a.contents,a.hit,a.reg_date from board a, user b where a.user_no = b.no and b.name like concat('%',?,'%') limit ?,?";
 			pstmt=con.prepareStatement(sql);
 			pstmt.setString(1, kwd);
-			
+			pstmt.setInt(2, displayPost);
+			pstmt.setInt(3, postNum);			
 			
 			rs = pstmt.executeQuery();
 			
@@ -554,6 +557,7 @@ public class BoardRepository {
 				String contents = rs.getString(4);
 				Integer hit = rs.getInt(5);
 				String regDate = rs.getString(6);
+						
 				
 				BoardVO boardVO = new BoardVO();
 				boardVO.setNo(no);
@@ -562,6 +566,7 @@ public class BoardRepository {
 				boardVO.setContents(contents);
 				boardVO.setHit(hit);
 				boardVO.setRegDate(regDate);
+				
 				
 				result.add(boardVO);
 			}		
@@ -585,6 +590,75 @@ public class BoardRepository {
 		return result;	
 	}
 
+	public int countTitle(String kwd) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		int count = 0;
+		try {
+			con = getConnection();
+
+			String sql = "select count(*) from board a, user b where a.user_no = b.no and a.title like concat('%',?,'%')";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, kwd);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt(1);				
+			}
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+				
+		return count;
+
+	}
+
+	public int countName(String kwd) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		int count = 0;
+		try {
+			con = getConnection();
+
+			String sql = "select count(*) from board a, user b where a.user_no = b.no and b.name like concat('%',?,'%')";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, kwd);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt(1);				
+			}
+		}catch (SQLException e) {
+			System.out.println("error" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();	
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return count;
+	}
 }
 
 

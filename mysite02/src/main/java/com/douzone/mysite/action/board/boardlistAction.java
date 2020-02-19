@@ -16,19 +16,19 @@ public class boardlistAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		int count = new BoardRepository().count();
+		int count = new BoardRepository().count();// 
 		int postNum = 10;
-		int Num = 0;
-		int displayPost = 0;
+		int Num;
+		int displayPost;
 		
-		int startPageNum = 0;
-		int endPageNum = 0;
+		int startPageNum;
+		int endPageNum;
 		
-		boolean prev = false;
-		boolean next = false;
+		boolean prev;
+		boolean next;
 		
 		List<BoardVO> list = null;
-		if( !(request.getParameter("num").isEmpty()) ) { //num값을 받아오면
+		
 				String num = request.getParameter("num"); //파라미터로 num을 받아서
 				Num = Integer.parseInt(num);
 				
@@ -55,9 +55,7 @@ public class boardlistAction implements Action {
 				
 				
 				list = new BoardRepository().findAll(displayPost,postNum);
-		}else {
-			list = new BoardRepository().findAll2();
-		}
+		
 		
 		
 

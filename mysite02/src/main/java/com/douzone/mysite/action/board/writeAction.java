@@ -19,7 +19,7 @@ public class writeAction implements Action {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		//접근 제어(Access Control List, ACL)
 		
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession();// 
 		if(session != null && session.getAttribute("authUser") != null) {
 			
 			BoardVO boardVO = new BoardVO();
@@ -31,11 +31,25 @@ public class writeAction implements Action {
 			String contents = request.getParameter("contents");
 			
 			
-			if(title.isEmpty() || contents.isEmpty()) {
-				WebUtil.redirect(request.getContextPath()+"/board?num=", request, response);
+			if(title.contains(" ")) { //공백이 포함되어 있으면 
+				title = title.trim();  //양쪽 공백 제거 
+				if(title.equals("")) { //제거를 해도 공백이라면
+					title="";
+				}
+			}
+			if(contents.contains(" ")) {
+				contents = contents.trim();
+				if(contents.equals("")) {
+					contents="";
+				}
+			}
+			
+			if( request.getParameter("title").isEmpty() || request.getParameter("contents").isEmpty() || title.equals("") || contents.equals("") ) {
+				WebUtil.redirect(request.getContextPath()+"/board?num=1", request, response);
 				return;
 			}
 			
+
 			
 			
 			

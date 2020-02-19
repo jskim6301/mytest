@@ -18,7 +18,7 @@ public class modifyAction implements Action {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		//접근 제어(Access Control List, ACL)
 		
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession();// 
 		if(session != null && session.getAttribute("authUser") != null) {
 			BoardVO boardVO = new BoardVO();
 			

@@ -15,7 +15,7 @@ public class modifyformAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String no = request.getParameter("no");
+		String no = request.getParameter("no");// 
 		Long No = Long.parseLong(no);
 		
 		BoardVO boardVO = new BoardVO();

@@ -6,7 +6,7 @@
 
 <%-- <%
 	//jsp안에서는 session이 내장되어 있음
-	UserVO authUser = (UserVO)session.getAttribute("authUser");	
+	UserVO authUser = (UserVO)session.getAttribute("authUser");	<!--  -->
 %> --%>
 <div id="header">
 	<h1>MySite</h1>
