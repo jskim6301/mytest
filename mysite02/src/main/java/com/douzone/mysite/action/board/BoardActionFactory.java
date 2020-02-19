@@ -7,7 +7,7 @@ public class BoardActionFactory extends ActionFactory {
 
 	@Override
 	public Action getAction(String actionName) {
-		switch(actionName) {
+		switch(actionName) {// 
 			case "writeform":
 				return new writeformAction();
 			case "write":

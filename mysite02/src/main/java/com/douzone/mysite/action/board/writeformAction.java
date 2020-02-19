@@ -17,7 +17,7 @@ public class writeformAction implements Action {
 
 		//접근 제어(Access Control List, ACL)
 		
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession();// 
 		if(session != null && session.getAttribute("authUser") != null) {
 			
 //			if( request.getParameter("no").isEmpty() ) {
