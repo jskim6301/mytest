@@ -8,8 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.douzone.mysite.vo.GuestbookVO;
 
+@Repository
 public class GuestbookRepository {
 	private Connection getConnection() throws SQLException {
 		Connection con = null;
@@ -27,12 +30,12 @@ public class GuestbookRepository {
 	}
 	
 
-	public Boolean insert(GuestbookVO guestbookVO) {
+	public int insert(GuestbookVO guestbookVO) {
 		
 		Boolean result = false;
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		
+		int count = 0;
 		try {
 			con = getConnection();
 			//insert into guestbook values(null,'홍길동','안녕하세요','1234',now())
@@ -44,9 +47,10 @@ public class GuestbookRepository {
 			pstmt.setString(3, guestbookVO.getPassword());
 
 			
-			int count = pstmt.executeUpdate();
+			count = pstmt.executeUpdate();
 			
-			result = count == 1;
+			count = 1;
+//			result = count == 1;
 			
 		}catch (SQLException e) {
 			System.out.println("error" + e);
@@ -62,7 +66,7 @@ public class GuestbookRepository {
 				e.printStackTrace();
 			}
 		}
-	return result;
+	return count;
 	}
 	
 	
@@ -119,7 +123,7 @@ public class GuestbookRepository {
 		return result;
 	}
 	
-	public boolean delete(GuestbookVO guestbookVO) {
+	public boolean delete(Long no, String password) {
 
 		Boolean result = false;
 		Connection con = null;
@@ -131,8 +135,8 @@ public class GuestbookRepository {
 			String sql = "delete from guestbook where no = ? and password = ?";
 			pstmt = con.prepareStatement(sql);
 
-			pstmt.setLong(1, guestbookVO.getNo());
-			pstmt.setString(2, guestbookVO.getPassword());
+			pstmt.setLong(1, no);
+			pstmt.setString(2, password);
 
 			int count = pstmt.executeUpdate();
 
