@@ -1,11 +1,14 @@
 package com.douzone.mysite.repository;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.douzone.mysite.exception.UserRepositoryException;
@@ -13,20 +16,15 @@ import com.douzone.mysite.vo.UserVO;
 
 @Repository
 public class UserRepository {
-	private Connection getConnection() throws SQLException {
-		Connection con = null;
-		
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			
+	
+//	private BasicDataSource basicDataSource;  => applicationContext에서 datasource가 여러개면 충돌이 일어나 오류가 난다. 그래서 DataSource로 받아서 Autowired를 통해 클래스(class)가 아닌 이름(id)지정방식으로 해준다.(1개면 오류안남)
+	@Autowired
+	private DataSource dataSource;
+	
+	@Autowired
+	private SqlSession sqlSession;
+	
 
-			String url = "jdbc:mysql://192.168.1.115:3307/webdb";
-			con =  DriverManager.getConnection(url,"webdb","webdb");
-		} catch (ClassNotFoundException e) {
-			throw new UserRepositoryException("드라이버 로딩 실패:"+ e);
-		}
-		return con;
-	}
 	
 	
 	public int insert(UserVO userVO) {
@@ -36,7 +34,7 @@ public class UserRepository {
 		PreparedStatement pstmt = null;
 		int count = 0;
 		try {
-			con = getConnection();
+			con = dataSource.getConnection();
 			//insert into user values(null,'홍길동','안녕하세요','1234',now())
 			String sql = "insert into user values(null,?,?,?,?,now())";
 			pstmt = con.prepareStatement(sql);
@@ -76,7 +74,7 @@ public class UserRepository {
 		ResultSet rs = null;
 
 		try {
-			con = getConnection();
+			con = dataSource.getConnection();
 			
 			String sql = "select no,name from user where email = ? and password = ?";
 			pstmt = con.prepareStatement(sql);
@@ -126,7 +124,7 @@ public class UserRepository {
 			ResultSet rs = null;
 			UserVO userVO = new UserVO();
 			try {
-				con = getConnection();
+				con = dataSource.getConnection();
 				
 				
 				
@@ -177,7 +175,7 @@ public class UserRepository {
 		PreparedStatement pstmt = null;
 
 		try {
-			con = getConnection();
+			con = dataSource.getConnection();
 
 			String sql = "update user set name =?, password=?,gender=?,join_date = now() where no = ?";
 			pstmt = con.prepareStatement(sql);
@@ -204,6 +202,21 @@ public class UserRepository {
 			}
 		}
 		
-		
 	}
+	
+	/*
+	private Connection getConnection() throws SQLException {
+		Connection con = null;
+		
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			
+
+			String url = "jdbc:mysql://192.168.1.115:3307/webdb";
+			con =  DriverManager.getConnection(url,"webdb","webdb");
+		} catch (ClassNotFoundException e) {
+			throw new UserRepositoryException("드라이버 로딩 실패:"+ e);
+		}
+		return con;
+	}*/
 }
