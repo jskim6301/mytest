@@ -8,8 +8,11 @@
 </head>
 <body>
 	<h1>Exception Occurs 예외발생</h1>
-	<p>
-		예외발생!!!<br>
-	</p>
+	
+		<pre style="color:red">
+		${exception }
+		</pre>
+		
+	
 </body>
 </html>
