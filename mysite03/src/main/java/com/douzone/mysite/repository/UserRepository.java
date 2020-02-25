@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Repository;
 
+import com.douzone.mysite.exception.UserRepositoryException;
 import com.douzone.mysite.vo.UserVO;
 
 @Repository
@@ -22,7 +23,7 @@ public class UserRepository {
 			String url = "jdbc:mysql://192.168.1.115:3307/webdb";
 			con =  DriverManager.getConnection(url,"webdb","webdb");
 		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:"+ e);
+			throw new UserRepositoryException("드라이버 로딩 실패:"+ e);
 		}
 		return con;
 	}
@@ -51,7 +52,7 @@ public class UserRepository {
 			count = 1;
 			
 		}catch (SQLException e) {
-			System.out.println("error" + e);
+			throw new UserRepositoryException(e.getMessage());
 		}finally {
 			try {
 				if(pstmt != null) {
@@ -97,7 +98,7 @@ public class UserRepository {
 			}			
 			
 		}catch (SQLException e) {
-			System.out.println("error" + e);
+			throw new UserRepositoryException(e.getMessage());
 		}finally {
 			try {
 				if(rs != null) {
@@ -153,7 +154,7 @@ public class UserRepository {
 
 				
 			}catch (SQLException e) {
-				System.out.println("error" + e);
+				throw new UserRepositoryException(e.getMessage());
 			}finally {
 				try {
 					if(pstmt != null) {
@@ -189,7 +190,7 @@ public class UserRepository {
 			pstmt.executeUpdate();			
 			
 		}catch (SQLException e) {
-			System.out.println("error" + e);
+			throw new UserRepositoryException(e.getMessage());
 		}finally {
 			try {
 				if(pstmt != null) {
