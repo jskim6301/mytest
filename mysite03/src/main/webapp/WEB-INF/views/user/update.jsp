@@ -21,13 +21,12 @@
 		<div id="content">
 			<div id="user">
 
-				<form id="join-form" name="joinForm" method="post" action="${pageContext.request.contextPath }/user">
-					<input type='hidden' name='a' value='update'/>
+				<form id="join-form" name="joinForm" method="post" action="${pageContext.request.contextPath }/user/update">
 					<label class="block-label" for="name">이름</label>
-					<input id="name" name="name" type="text" value="">
+					<input id="name" name="name" type="text" value="${authUser.name }">
 
 					<label class="block-label" for="email">이메일</label>
-					<h4>${authUser.email }</h4>
+					<h4>${userVO.email }</h4>
 					<%-- <h4><%=authUser.getEmail() %></h4> --%>					
 					<label class="block-label">패스워드</label>
 					<input name="password" type="password" value="">

@@ -19,5 +19,9 @@ public class UserService {
 	public UserVO getUser(UserVO vo) {
 		return userRepository.findByEmailAndPassword(vo);
 	}
+
+	public UserVO getUser(Long no) {
+		return userRepository.findByNo(no);
+	}
 	
 }
