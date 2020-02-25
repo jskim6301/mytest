@@ -27,7 +27,9 @@ public class UserController {
 	
 	@RequestMapping(value="/join", method=RequestMethod.POST)	
 	public String join(UserVO vo) {
+		System.out.println(vo);
 		userService.join(vo);
+		System.out.println(vo);//프라이머리 키만 가능
 		return "redirect:/user/joinsuccess";
 	}
 	

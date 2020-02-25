@@ -3,5 +3,31 @@
 
 <mapper namespace="user">
 
+	<insert id="insert" parameterType="uservo">
+		<![CDATA[
+		insert into user values(null,#{name},#{email},#{password},#{gender},now())
+		]]>
+		
+		<selectKey keyProperty="no" resultType="long" order="AFTER">
+			select last_insert_id()
+		</selectKey>		
+	</insert>
+	
+	<select id="findByEmailAndPassword" parameterType="uservo" resultType="uservo">
+		<![CDATA[
+			select no,name from user where email = #{email} and password = #{password}
+		]]>
+	</select>
 
+	<select id="findByEmailAndPassword2" parameterType="map" resultType="uservo">
+		<![CDATA[
+			select no,name from user where email = #{e} and password = #{p}
+		]]>
+	</select>	
+	
+	<select id="findByNo" parameterType="long" resultType="uservo"> <!-- 타입- 소문자로 내장됨        -->  <!-- #{no} 부분에 값이 들어가는 부분에는 아무거나 넣어도 된다. -->
+		<![CDATA[
+			select no,name,email,password,gender,join_date from user where no = #{no} 
+		]]>                                                                      
+	</select>
 </mapper>

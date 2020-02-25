@@ -2,8 +2,9 @@ package com.douzone.mysite.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -18,6 +19,7 @@ import com.douzone.mysite.vo.UserVO;
 public class UserRepository {
 	
 //	private BasicDataSource basicDataSource;  => applicationContext에서 datasource가 여러개면 충돌이 일어나 오류가 난다. 그래서 DataSource로 받아서 Autowired를 통해 클래스(class)가 아닌 이름(id)지정방식으로 해준다.(1개면 오류안남)
+
 	@Autowired
 	private DataSource dataSource;
 	
@@ -25,148 +27,25 @@ public class UserRepository {
 	private SqlSession sqlSession;
 	
 
-	
-	
 	public int insert(UserVO userVO) {
 		
-		Boolean result = false;
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		int count = 0;
-		try {
-			con = dataSource.getConnection();
-			//insert into user values(null,'홍길동','안녕하세요','1234',now())
-			String sql = "insert into user values(null,?,?,?,?,now())";
-			pstmt = con.prepareStatement(sql);
-
-			pstmt.setString(1, userVO.getName());
-			pstmt.setString(2, userVO.getEmail());
-			pstmt.setString(3, userVO.getPassword());
-			pstmt.setString(4, userVO.getGender());
-
-			
-			count = pstmt.executeUpdate();
-//			result = count == 1;
-			count = 1;
-			
-		}catch (SQLException e) {
-			throw new UserRepositoryException(e.getMessage());
-		}finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(con != null) {
-					con.close();	
-				}				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	return count;
+		return sqlSession.insert("user.insert",userVO);
 	}
 
 	public UserVO findByEmailAndPassword(UserVO vo) {
-		UserVO userVO = null;
 		
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-
-		try {
-			con = dataSource.getConnection();
-			
-			String sql = "select no,name from user where email = ? and password = ?";
-			pstmt = con.prepareStatement(sql);
-			
-			pstmt.setString(1, vo.getEmail());
-			pstmt.setString(2, vo.getPassword());
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				
-				
-				
-				userVO = new UserVO();
-				userVO.setNo(no);
-				userVO.setName(name);
-								
-			}			
-			
-		}catch (SQLException e) {
-			throw new UserRepositoryException(e.getMessage());
-		}finally {
-			try {
-				if(rs != null) {
-					rs.close();
-				}
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(con != null) {
-					con.close();	
-				}				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return userVO;
+		return sqlSession.selectOne("user.findByEmailAndPassword",vo);
 	}
+	public UserVO findByEmailAndPassword(String email,String password) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("e", email);
+		map.put("p", password);
+		
+		return sqlSession.selectOne("user.findByEmailAndPassword2",map);
+	}	
 
 	public UserVO findByNo(Long no) {
-		
-			
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			UserVO userVO = new UserVO();
-			try {
-				con = dataSource.getConnection();
-				
-				
-				
-				String sql = "select no,name,email,password,gender,join_date from user where no = ?";
-				pstmt=con.prepareStatement(sql);
-				pstmt.setLong(1, no);
-				
-				rs = pstmt.executeQuery();
-				
-				if(rs.next()) {
-					Long newNo = rs.getLong(1);
-					String name = rs.getString(2);
-					String email = rs.getString(3);
-					String password = rs.getString(4);
-					String gender = rs.getString(5);
-					String joinDate = rs.getString(6);
-					
-					userVO.setNo(newNo);
-					userVO.setName(name);
-					userVO.setEmail(email);
-					userVO.setPassword(password);
-					userVO.setGender(gender);
-					userVO.setJoinDate(joinDate);
-				}		
-
-				
-			}catch (SQLException e) {
-				throw new UserRepositoryException(e.getMessage());
-			}finally {
-				try {
-					if(pstmt != null) {
-						pstmt.close();
-					}
-					if(con != null) {
-						con.close();	
-					}				
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			return userVO;		
+		return sqlSession.selectOne("user.findByNo",no);	
 	}
 
 	public void update(UserVO userVO) {
