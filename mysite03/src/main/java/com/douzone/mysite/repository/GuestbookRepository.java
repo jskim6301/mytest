@@ -3,11 +3,11 @@ package com.douzone.mysite.repository;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.douzone.mysite.exception.GuestbookRepositoryException;
@@ -15,6 +15,10 @@ import com.douzone.mysite.vo.GuestbookVO;
 
 @Repository
 public class GuestbookRepository {
+	
+	@Autowired
+	private SqlSession sqlSession;
+	
 	private Connection getConnection() throws SQLException {
 		Connection con = null;
 		
@@ -72,56 +76,8 @@ public class GuestbookRepository {
 	
 	
 	public List<GuestbookVO> findAll(){
-		List<GuestbookVO> result = new ArrayList<>();
-		
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-
-		try {
-			con = getConnection();
-			
-			String sql = "select no,name,contents,password,reg_date from guestbook order by no desc";
-			pstmt = con.prepareStatement(sql);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				String contents = rs.getString(3);
-				String password = rs.getString(4);
-				String regDate =rs.getString(5);
-				
-				GuestbookVO vo = new GuestbookVO();
-				vo.setNo(no);
-				vo.setName(name);
-				vo.setContents(contents);
-				vo.setPassword(password);
-				vo.setRegDate(regDate);				
-				
-				result.add(vo);
-			}			
-			
-		}catch (SQLException e) {
-			throw new GuestbookRepositoryException(e.getMessage());
-		}finally {
-			try {
-				if(rs != null) {
-					rs.close();
-				}
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(con != null) {
-					con.close();	
-				}				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}		
-		
-		return result;
+		List<GuestbookVO> list = sqlSession.selectList("guestbook.findAll");
+		return list;
 	}
 	
 	public boolean delete(Long no, String password) {

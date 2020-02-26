@@ -2,5 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="guestbook">
+	<select id="findAll" resultType="guestbookvo">
+		<![CDATA[
+		select no,
+			   name,
+			   contents,
+			   date_format(reg_date, '%Y-%m-%d %h:%i:%s') as regDate 
+			from guestbook
+		order by reg_date desc
+		]]>
+	</select>
 
+	<select id="findAll2" resultType="guestbookvo" parameterType="long"> <!-- 동적쿼리 일때는 객체가 아닌 long 일때는 아무값이 아닌 _parameter를 써준다 -->
+		<![CDATA[
+		select no,
+			   name,
+			   contents,
+			   date_format(reg_date, '%Y-%m-%d %h:%i:%s') as regDate 
+			from guestbook
+			<if test='_parameter > 0'>
+				where no < #{_parameter}
+			</if>
+		order by no desc
+			limit 0,3
+		]]>
+	</select>	
 </mapper>

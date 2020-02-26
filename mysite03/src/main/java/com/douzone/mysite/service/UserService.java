@@ -23,5 +23,10 @@ public class UserService {
 	public UserVO getUser(Long no) {
 		return userRepository.findByNo(no);
 	}
+
+	public boolean updateUser(UserVO userVO) {
+		int count = userRepository.update(userVO);
+		return count == 1;
+	}
 	
 }

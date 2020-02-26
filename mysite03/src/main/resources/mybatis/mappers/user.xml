@@ -25,9 +25,31 @@
 		]]>
 	</select>	
 	
-	<select id="findByNo" parameterType="long" resultType="uservo"> <!-- 타입- 소문자로 내장됨        -->  <!-- #{no} 부분에 값이 들어가는 부분에는 아무거나 넣어도 된다. -->
+	<select id="findByNo" parameterType="long" resultType="uservo"> <!-- 타입- 소문자로 내장됨        -->  <!--동적쿼리가 아닐경우는 파라미터 타입이 객체가 아닌 자료형일 경우  #{no} 부분에 값이 들어가는 부분에는 아무거나 넣어도 된다. -->
 		<![CDATA[
 			select no,name,email,password,gender,join_date from user where no = #{no} 
 		]]>                                                                      
 	</select>
+	
+	<update id="update" parameterType="uservo">
+		<choose>
+			<when test='password != ""'>
+				<![CDATA[
+				update user 
+					set name= #{name},
+						password = #{password},			
+						gender= #{gender}	
+					where no = #{no}	
+				]]>											
+			</when>
+			<otherwise>
+				<![CDATA[
+				update user 
+					set name= #{name},		
+						gender= #{gender}	
+					where no = #{no}	
+				]]>								
+			</otherwise>
+		</choose>
+	</update>
 </mapper>
