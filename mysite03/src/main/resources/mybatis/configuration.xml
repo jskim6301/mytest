@@ -4,10 +4,11 @@
 	<typeAliases>
 		<typeAlias alias="uservo" type="com.douzone.mysite.vo.UserVO"/>
 		<typeAlias alias="guestbookvo" type="com.douzone.mysite.vo.GuestbookVO"/>
+		<typeAlias alias="boardvo" type="com.douzone.mysite.vo.BoardVO"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mappers/user.xml" />
 		<mapper resource="mybatis/mappers/guestbook.xml" />
-		<!-- <mapper resource="mybatis/mappers/board.xml" /> -->
+		<mapper resource="mybatis/mappers/board.xml" />
 	</mappers>
 </configuration>

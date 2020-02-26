@@ -14,15 +14,8 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp" /><!--  -->
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.request.contextPath }/board" method="post">
-					<input type = "hidden" name = "a" value="search">
-					<input type = "hidden" name = "num" value="1">
-					<input type="text" id="kwd" name="kwd" value="">
-						<select name="option">
-							<option value="title">제목으로 찾기</option>
-							<option value="name">이름으로 찾기</option>
-						</select>
-						
+				<form id="search_form" action="${pageContext.request.contextPath }/board" method="get">
+					<input type="text" id="kwd" name="kwd" value="${keyword }">
 					<input type="submit" value="찾기">
 				</form>
 				
@@ -37,9 +30,9 @@
 					</tr>				
 					<c:set var="cnt" value='${fn:length(list) }'/>
 					
-					<c:forEach items='${list}' var='vo' varStatus='status'>
+					<c:forEach items='${map.list}' var='vo' varStatus='status'>
 					<tr>
-						<td>${count-(displayPost) -status.index }</td>
+						<td>${map.count-(map.displayPost) -status.index }</td>
 						
 <%-- 						<c:choose>
 							<c:when test="${vo.depth>0}">
@@ -56,10 +49,10 @@
 							
 								<c:choose>
 								<c:when test="${vo.depth>0}">
-									<td style="text-align:left; padding-left:${30*vo.depth }px"><img src='/mysite02/assets/images/reply.png'><a href="${pageContext.request.contextPath }/board?a=viewform&no=${vo.no}">${vo.title }</a></td>
+									<td style="text-align:left; padding-left:${30*vo.depth }px"><img src='/mysite02/assets/images/reply.png'><a href="${pageContext.request.contextPath }/board/view/${vo.no}">${vo.title }</a></td>
 								</c:when>
 								<c:otherwise>
-									<td style="text-align:left; padding-left:${30*vo.depth }px"><a href="${pageContext.request.contextPath }/board?a=viewform&no=${vo.no}">${vo.title }</a></td>							
+									<td style="text-align:left; padding-left:${30*vo.depth }px"><a href="${pageContext.request.contextPath }/board/view/${vo.no}">${vo.title }</a></td>							
 								</c:otherwise>								
 								</c:choose>								
 																								
@@ -106,33 +99,36 @@
 				<!-- pager 추가 -->
 				<div class ="pager">
 				<div class="selected">
-					<c:if test="${prev}">
-						<span>[ <a href="${pageContext.request.contextPath }/board?num=${startPageNum -1}">이전</a> ]</span>
+					<c:if test="${map.prev}">
+						<span>[ <a href="${pageContext.request.contextPath }/board?num=${map.startPageNum -1}">이전</a> ]</span>
 					</c:if>
 					
 					
-						<c:forEach begin="${startPageNum}" end="${endPageNum}" var="num">
+						<c:forEach begin="${map.startPageNum}" end="${map.endPageNum}" var="num">
 							<span>
-								<c:if test="${select != num }">
+								<c:if test="${map.currentPage != num }">
 									<a href="${pageContext.request.contextPath }/board?num=${num}">${num}</a>
 								</c:if>
 								
-								<c:if test="${select == num }">
+								<c:if test="${map.currentPage == num }">
 									<b>${num}</b>
 								</c:if>
 											
 							</span>
 						</c:forEach>
 								
-					<c:if test="${next}">
-						<span>[ <a href="${pageContext.request.contextPath }/board?num=${endPageNum+1}">다음</a> ]</span>
+					<c:if test="${map.next}">
+						<span>[ <a href="${pageContext.request.contextPath }/board?num=${map.endPageNum+1}">다음</a> ]</span>
 					</c:if>
 				</div>
 				</div>
 				<!-- pager 추가 -->				
 				
 				<div class="bottom">
-					<a href="${pageContext.request.contextPath }/board?a=writeform&no=" id="new-book">글쓰기</a>
+					<c:if test="${not empty authUser }">
+						<a href="${pageContext.request.contextPath }/board/write?p=${map.currentPage}&kwd=${map.keyword}" id="new-book">글쓰기</a>
+					</c:if>
+					
 				</div>				
 			</div>
 		</div>
