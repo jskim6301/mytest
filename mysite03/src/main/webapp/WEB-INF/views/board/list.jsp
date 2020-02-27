@@ -82,9 +82,9 @@
 								</c:if>
 							</c:when>
 							<c:otherwise>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td>${vo.userName }</td>
+								<td>${vo.hit }</td>
+								<td>${fn:substring(vo.regDate,0,19) }</td>
 								<c:if test="${vo.userName==authUser.name }">
 									<td><a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no}" class="del">삭제</a></td>
 								</c:if>								

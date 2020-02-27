@@ -33,7 +33,7 @@
 						a.o_no as oNo,
 						a.depth,
 						a.user_no as userNo,
-						b.name 
+						b.name as userName
 					from board a, user b 
 					where a.user_no = b.no 
 						order by a.g_no desc, a.o_no desc 
@@ -52,7 +52,7 @@
 						a.o_no as oNo,
 						a.depth,
 						a.user_no as userNo,
-						b.name 
+						b.name as userName
 					from board a, user b 
 					where a.user_no = b.no 
 						and (title like '%${keyword }%' or contents like '%${keyword }%')

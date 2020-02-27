@@ -21,7 +21,7 @@ public class BoardService {
 	
 
 
-	public Map<String,Object> getContentsList(int currentPage,String keyword) { //초기값 page=1(int), keyword = "", option =""
+	public Map<String,Object> getContentsList(int currentPage,String keyword) { //초기값 page=1(int), keyword = ""
 		int count = boardRepository.getTotalCount(keyword);
 		int startPageNum;
 		int endPageNum;
@@ -88,6 +88,9 @@ public class BoardService {
 
 
 	public boolean addContents(BoardVO boardVO) {
+		if(boardVO.getgNo() != null) { //그룹넘버가 있다는 말은 
+			increaseGroupOrderNo(boardVO);
+		}
 		return boardRepository.insert(boardVO) == 1;		
 	}
 

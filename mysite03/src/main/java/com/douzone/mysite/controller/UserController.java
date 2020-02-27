@@ -5,13 +5,14 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.douzone.mysite.service.UserService;
 import com.douzone.mysite.vo.UserVO;
+import com.douzone.security.Auth;
 
+//@Auth
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -42,40 +43,42 @@ public class UserController {
 		return "user/login";
 	}
 	
-	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public String login(HttpSession session, @ModelAttribute UserVO vo) {
-		
-		UserVO authUser =  userService.getUser(vo);
-		if(authUser == null) {
-			return "user/login";
-		}
-		
-		session.setAttribute("authUser", authUser);
-		return "redirect:/";
-	}
+//	@RequestMapping(value="/login",method=RequestMethod.POST)
+//	public String login(HttpSession session, @ModelAttribute UserVO vo) {
+//		
+//		UserVO authUser =  userService.getUser(vo);
+//		if(authUser == null) {
+//			return "user/login";
+//		}
+//		
+//		session.setAttribute("authUser", authUser);
+//		return "redirect:/";
+//	}
 	
-	@RequestMapping(value="/logout")
-	public String logout(HttpSession session) {
-		/////////////////////////접근제어/////////////////////////////////////
-		UserVO authUser = (UserVO)session.getAttribute("authUser");
-		if(authUser == null) {
-			return "redirect:/";
-		}		
-		//////////////////////////////////////////////////////////////
-		session.removeAttribute("authUser");
-		session.invalidate();
-		return "redirect:/";
-	}
+//	@RequestMapping(value="/logout")
+//	public String logout(HttpSession session) {
+//		/////////////////////////접근제어/////////////////////////////////////
+//		UserVO authUser = (UserVO)session.getAttribute("authUser");
+//		if(authUser == null) {
+//			return "redirect:/";
+//		}		
+//		//////////////////////////////////////////////////////////////
+//		session.removeAttribute("authUser");
+//		session.invalidate();
+//		return "redirect:/";
+//	}
 	
-	
+//	@Auth(value ="user", test=true)
+//	@Auth(value ="user")
+//	@Auth(role=Auth.Role.USER) //생략가능(role=Auth.Role.USER)
+	@Auth
 	@RequestMapping(value="/update",method=RequestMethod.GET)
 	public String update(HttpSession session,Model model) {
-		/////////////////////////접근제어/////////////////////////////////////		
+//	public String update(@AuthUser UserVO authUser,Model model) {	
+		//접근제어 처리완료
+		
 		UserVO authUser = (UserVO) session.getAttribute("authUser");
-		if(authUser == null) {
-			return "redirect:/";
-		}
-		//////////////////////////////////////////////////////////////
+
 		Long no = authUser.getNo();
 		UserVO vo = userService.getUser(no);
 		
