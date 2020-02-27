@@ -17,6 +17,7 @@ import com.douzone.mysite.service.BoardService;
 import com.douzone.mysite.vo.BoardVO;
 import com.douzone.mysite.vo.UserVO;
 import com.douzone.security.Auth;
+import com.douzone.security.AuthUser;
 import com.douzone.web.util.WebUtil;
 
 
@@ -51,7 +52,8 @@ public class BoardController {
 	@Auth
 	@RequestMapping( "/delete/{no}" )
 	public String delete(
-		HttpSession session,	
+		HttpSession session,
+//		@AuthUser UserVO authUser
 		@PathVariable( "no" ) Long boardNo,
 		@RequestParam( value="p", required=true, defaultValue="1") Integer page,
 		@RequestParam( value="kwd", required=true, defaultValue="") String keyword ) {
@@ -72,6 +74,7 @@ public class BoardController {
 	@RequestMapping( value="/modify/{no}" )	
 	public String modify(
 		HttpSession session,
+//		@AuthUser UserVO authUser
 		@PathVariable( "no" ) Long no,
 		Model model) {
 /*
@@ -92,6 +95,7 @@ public class BoardController {
 	@RequestMapping( value="/modify", method=RequestMethod.POST )	
 	public String modify(
 		HttpSession session,	
+//		@AuthUser UserVO authUser
 		@ModelAttribute BoardVO boardVo,
 		@RequestParam( value="p", required=true, defaultValue="1") Integer page,
 		@RequestParam( value="kwd", required=true, defaultValue="") String keyword ) {

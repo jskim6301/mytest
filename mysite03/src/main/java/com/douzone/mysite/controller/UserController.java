@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.douzone.mysite.service.UserService;
 import com.douzone.mysite.vo.UserVO;
 import com.douzone.security.Auth;
+import com.douzone.security.AuthUser;
 
 //@Auth
 @Controller
@@ -71,13 +72,13 @@ public class UserController {
 //	@Auth(value ="user", test=true)
 //	@Auth(value ="user")
 //	@Auth(role=Auth.Role.USER) //생략가능(role=Auth.Role.USER)
+
+//	public String update(HttpSession session,Model model) {
 	@Auth
 	@RequestMapping(value="/update",method=RequestMethod.GET)
-	public String update(HttpSession session,Model model) {
-//	public String update(@AuthUser UserVO authUser,Model model) {	
-		//접근제어 처리완료
+	public String update(@AuthUser UserVO authUser,Model model) {	
 		
-		UserVO authUser = (UserVO) session.getAttribute("authUser");
+//		UserVO authUser = (UserVO) session.getAttribute("authUser");
 
 		Long no = authUser.getNo();
 		UserVO vo = userService.getUser(no);
@@ -86,15 +87,19 @@ public class UserController {
 		return "user/update";
 		
 	}	
-	
+
+//	public String update(HttpSession session,UserVO userVO) {
+	@Auth
 	@RequestMapping(value="/update",method=RequestMethod.POST)
-	public String update(HttpSession session,UserVO userVO) {
+	public String update(@AuthUser UserVO authUser,UserVO userVO) {		
+/*
 		///////////////////////접근제어/////////////////////////
 		UserVO authUser = (UserVO) session.getAttribute("authUser");
 		if(authUser == null) {
 			return  "redirect:/";
 		}
-		//////////////////////////////////////////////////////
+		////////////////////////////////////////////////////// 
+ */
 		userVO.setNo(authUser.getNo());
 		userService.updateUser(userVO);
 		return "redirect:/";
