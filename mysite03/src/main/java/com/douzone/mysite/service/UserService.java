@@ -8,12 +8,14 @@ import com.douzone.mysite.vo.UserVO;
 
 @Service
 public class UserService {
+
 	@Autowired
 	private UserRepository userRepository;
 	
 	public Boolean join(UserVO vo) {
 		int count = userRepository.insert(vo);
 		return count == 1;
+		
 	}
 
 	public UserVO getUser(UserVO vo) {
@@ -24,9 +26,8 @@ public class UserService {
 		return userRepository.findByNo(no);
 	}
 
-	public boolean updateUser(UserVO userVO) {
+	public Boolean updateUser(UserVO userVO) {
 		int count = userRepository.update(userVO);
 		return count == 1;
 	}
-	
 }

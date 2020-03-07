@@ -27,21 +27,21 @@
 					</tr>
 					<tr>
 						<td class="label">내용</td>
-						<td>
-							<div class="view-content">${fn:replace(boardVO.contents,newLine,"<br>") }</div>	
+							<td>
+								<div class="view-content">${fn:replace(boardVO.contents,newLine,"<br>") }</div>
+							</td>
+						<td>	
 						</td>
 					</tr>
 				</table>
 				<div class="bottom">
-					<c:if test="${boardVO.userName!=authUser.name }">
-						<a href="${pageContext.request.contextPath }/board?a=writeform&no=${boardVO.no}">답글작성</a>
-					</c:if>
-					
-					<a href="${pageContext.request.contextPath }/board?num=1">글목록</a>
-					<c:if test="${boardVO.userName==authUser.name }">
-						<a href="${pageContext.request.contextPath }/board?a=modifyform&no=${boardVO.no}">글수정</a>
-					</c:if>
-					
+					<a href="${pageContext.request.contextPath }/board?p=${param.p}&kwd=${param.kwd}">글목록</a>
+					<c:if test="${not empty authUser }">
+						<a href="${pageContext.request.contextPath }/board/reply/${boardVO.no}?p=${param.p}&kwd=${param.kwd}">답글 달기</a>
+						<c:if test="${authUser.no == boardVO.userNo }">
+						<a href="${pageContext.request.contextPath }/board/modify/${boardVO.no}?p=${param.p}&kwd=${param.kwd}">글수정</a>
+						</c:if>
+					</c:if>					
 				</div>
 			</div>
 		</div>

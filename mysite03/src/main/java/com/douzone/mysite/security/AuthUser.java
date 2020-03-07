@@ -1,4 +1,4 @@
-package com.douzone.security;
+package com.douzone.mysite.security;
 
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

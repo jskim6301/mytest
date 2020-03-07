@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
-	public void handleException(HttpServletRequest request,HttpServletResponse response,Exception e) throws Exception{
+	public String handleException(HttpServletRequest request,HttpServletResponse response,Exception e) throws Exception{
 		
 		//1. 로깅(logging)
 		e.printStackTrace();// 화면에 뿌림
@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
 		
 		//2. 안내페이지 가기(정상종료)
 		request.setAttribute("exception", errors.toString());
-		request.getRequestDispatcher("/WEB-INF/views/error/exception.jsp").forward(request, response);
+		return "error/exception";
+//		request.getRequestDispatcher("/WEB-INF/views/error/exception.jsp").forward(request, response);
 	}
 }

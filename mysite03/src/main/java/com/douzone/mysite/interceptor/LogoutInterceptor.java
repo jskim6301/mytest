@@ -1,4 +1,4 @@
-package com.douzone.security;
+package com.douzone.mysite.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +15,7 @@ public class LogoutInterceptor extends HandlerInterceptorAdapter {
 		
 		session.removeAttribute("authUser");
 		session.invalidate();
-		response.sendRedirect(request.getContextPath());
+		response.sendRedirect(request.getContextPath());		
 		return false;
 	}
-
 }

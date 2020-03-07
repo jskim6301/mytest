@@ -14,91 +14,81 @@ import com.douzone.mysite.vo.BoardVO;
 public class BoardService {
 	
 	private static final int postNum = 10;
-	private static final int pageNum_cnt = 10; 		//한번에 표시할 페이징 번호의 갯수
+	private static final int pageNum_cnt = 10;
 	
 	@Autowired
 	private BoardRepository boardRepository;
 	
-
-
-	public Map<String,Object> getContentsList(int currentPage,String keyword) { //초기값 page=1(int), keyword = ""
+	public Map<String, Object> getContentsList(int currentPage, String keyword) {
 		int count = boardRepository.getTotalCount(keyword);
-		int startPageNum;
-		int endPageNum;
 		
-		boolean prev;
-		boolean next;
+		int displayPost = (currentPage -1) * postNum;
+				
+		int endPageNum = (int)(Math.ceil((double)currentPage/(double)pageNum_cnt) * pageNum_cnt);// currentPage 가 156일 경우 endPageNum 은 160
+		int startPageNum = endPageNum - (pageNum_cnt-1);//startPageNum은 151~160
 		
-		int displayPost = (currentPage-1) * postNum;
-		
-
-		//표시되는 페이지 번호 중 마지막 번호
-		endPageNum = (int)(Math.ceil((double)currentPage/(double)pageNum_cnt) * pageNum_cnt);
-		//표시되는 페이지 번호 중 첫 번째 번호
-		startPageNum = endPageNum - (pageNum_cnt - 1);
-		
-		//마지막 번호 재계산
-		int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
-		
+		int endPageNum_tmp = (int)(Math.ceil((double)count/(double)pageNum_cnt));
 		if(endPageNum > endPageNum_tmp) {
 			endPageNum = endPageNum_tmp;
 		}
+		boolean prev = startPageNum == 1 ? false : true;//시작 페이지 번호가 1일 때를 제외하곤 무조건 출력
 		
-		prev = startPageNum == 1 ? false : true;
-		next = endPageNum * pageNum_cnt >= count ? false : true;
+		boolean next = endPageNum * pageNum_cnt >= count ? false : true;//마지막 페이지 번호가 총 게시물 갯수보다 작다면, 다음 구간이 있다는 의미이므로 출력
 		
 		List<BoardVO> list = boardRepository.findAll(displayPost,postNum,keyword);
+		Map<String,Object> map = new HashMap<String,Object>();
 		
-		//하단 페이징 번호( [게시물 총 갯수 + 한페이지에 출력할 갯수]의 올림)
-		int pageNum = (int)Math.ceil((double)count/postNum);
-		System.out.println(pageNum);//308
+		map.put("list",list);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		//시작 및 끝 번호
-		map.put("startPageNum", startPageNum);
-		map.put("endPageNum", endPageNum);
+		map.put("prev",prev);
+		map.put("next",next);
 		
-		//이전 및 다음
-		map.put("prev", prev);
-		map.put("next", next);
+		map.put("count",count);
+		map.put("currentPage",currentPage);
+		map.put("displayPost",displayPost);
 		
-		//현재 페이지
-		map.put("currentPage", currentPage);
+		map.put("startPageNum",startPageNum);
+		map.put("endPageNum",endPageNum);
 		
-		map.put("displayPost", displayPost);
-		map.put("count", count);
-		map.put("pageNum",pageNum);
-		map.put("list", list);
+		map.put("keyword",keyword);
 		
 		return map;
 	}
 
-
-
 	public BoardVO getContents(Long no) {
 		BoardVO boardVO = boardRepository.findByNo(no);
-		
 		if(boardVO != null) {
 			boardRepository.updateHit(no);
 		}
-		
 		return boardVO;
 	}
 
-
-
-	public boolean addContents(BoardVO boardVO) {
-		if(boardVO.getgNo() != null) { //그룹넘버가 있다는 말은 
+	public Boolean addContents(BoardVO boardVO) {
+		if(boardVO.getgNo() != null) {
 			increaseGroupOrderNo(boardVO);
 		}
-		return boardRepository.insert(boardVO) == 1;		
+		return boardRepository.insert(boardVO) == 1;
 	}
 
+	private Boolean increaseGroupOrderNo(BoardVO boardVO) {
+		return boardRepository.updateSequence(boardVO.getgNo(),boardVO.getoNo()) > 0;
+	}
 
+	public Boolean deleteContents(Long boardNo, Long userNo) {
+		int count = boardRepository.delete(boardNo,userNo);
+		return count == 1;
+	}
 
-	public boolean increaseGroupOrderNo(BoardVO boardVO) {
-		return boardRepository.updateSequece(boardVO.getgNo(),boardVO.getoNo()) > 0; 
+	public BoardVO getContents(Long boardNo, Long userNo) {
+		BoardVO boardVO = boardRepository.findByNoAndUserNo(boardNo,userNo);
+		return boardVO;
+	}
+
+	public Boolean modifyContents(BoardVO boardVO) {
+		int count = boardRepository.update(boardVO);
+		return count == 1;
 		
 	}
+	
 
 }

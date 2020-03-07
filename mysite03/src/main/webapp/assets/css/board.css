@@ -140,7 +140,7 @@ div.pager {
 	width:100%;
 	text-align:center;
 }
-div.pager .selected{ font-size:16px; text-decoration: underline; color:#f40808}
+div.selected{ font-size:16px; text-decoration: underline; color:#f40808}
 /*
 div.pager  ul {
 	height:20px;
